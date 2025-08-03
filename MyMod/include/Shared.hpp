@@ -41,11 +41,9 @@ public:
 		{
 			case AddressRetrievalType::SIGNATURE: {
 				return FindAddressBySignature();
-				break;
 			}
 			case AddressRetrievalType::OFFSET: {
 				return FindAddressByOffset();
-				break;
 			}
 			default:
 				return false;
@@ -80,7 +78,7 @@ private:
 			}
 		};
 		SinglePassScanner::start_scan(signature_map);
-		return func_container.get_did_succeed();
+		return m_bIsInitialized;
 	}
 
 	bool FindAddressByOffset() {
