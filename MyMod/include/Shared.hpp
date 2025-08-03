@@ -70,15 +70,17 @@ private:
 				0;
 			}
 		);
-		std::vector<SignatureContainer> container_vector;
-		container_vector.push_back(func_container);
 
-		SinglePassScanner::SignatureContainerMap signature_map;
-		signature_map[ScanTarget::Engine] = container_vector;
-
+		SinglePassScanner::SignatureContainerMap signature_map{
+			{
+				ScanTarget::Engine,
+				{ 
+					func_container
+				}
+			}
+		};
 		SinglePassScanner::start_scan(signature_map);
-		bool did_succeed = (container_vector[0]).get_did_succeed();
-		return did_succeed;
+		return func_container.get_did_succeed();
 	}
 
 	bool FindAddressByOffset() {
