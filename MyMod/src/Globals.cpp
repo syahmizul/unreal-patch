@@ -72,6 +72,18 @@ namespace Globals {
         if (!Hooks::RegisterHook(&Globals::g_FPakPlatformFile__Mount_Hook.value()))
             return false;
 
+        Globals::g_LoadSeparatedNameBatchInShardOrder_Hook.emplace(
+            AddressRetrievalType::SIGNATURE,
+            reinterpret_cast<uintptr_t>(&HookFunctions::hkLoadSeparatedNameBatchInShardOrder),
+            0,0,
+            "40 55 53 56 41 54 41 55 41 56 41 57 48 8D AC 24 10 F0"
+        );
+
+        // Disabled for now,since it can be inconsistent
+        // (TArray that is used in the hook can randomly not work due to race condition due to UE4SS not initializing before our hook gets executed)
+        /*if (!Hooks::RegisterHook(&Globals::g_LoadSeparatedNameBatchInShardOrder_Hook.value()))
+            return false;*/
+
         return true;
     }
     bool Execute()

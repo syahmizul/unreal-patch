@@ -1,8 +1,11 @@
 #pragma once
 
+#define NOMINMAX
+
 #include <cstdint>
 #include <string>
 #include <vector>
+
 #include <Windows.h>
 
 #include <include/Shared.hpp>
@@ -46,5 +49,20 @@ namespace Globals {
     // Patches the bSigned parameter of FPakFile's constructor to be false when it's our custom pak file.
     inline std::optional<Hooks> g_FPakFileConstructor_Hook;
 
+    /*
+        Patches so it skips these if it's our asset
+
+        if (bPakSuccess && IoDispatcherFileBackend.IsValid())
+        {
+            FGuid EncryptionKeyGuid = Pak->GetInfo().EncryptionKeyGuid;
+            FAES::FAESKey EncryptionKey;
+
+            if (!UE::FEncryptionKeyManager::Get().TryGetKey(EncryptionKeyGuid, EncryptionKey))
+            {
+    
+    */
     inline std::optional<Hooks> g_FPakPlatformFile__Mount_Hook;
+
+    // Hooks the function that reads AssetRegistry.bin(contained in asset files like .utoc/.ucas/.pak,I think) to add in our asset name
+    inline std::optional<Hooks> g_LoadSeparatedNameBatchInShardOrder_Hook;
 }
