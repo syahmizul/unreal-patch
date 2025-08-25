@@ -1,15 +1,5 @@
-#include <include/Globals.hpp>
-
-bool Patch::RegisterPatch(Patch* patch_instance) {
-    g_Patches.push_back(patch_instance);
-    return true;
-}
-
-bool Patch::UnregisterPatches() {
-    RestorePatches();
-    g_Patches.clear();
-    return true;
-}
+#include "include/Patch/Patch.hpp" 
+#include "include/Helpers.hpp"
 
 bool Patch::Execute() {
     return this->FindAddress() && this->m_PatchRoutine(this);
@@ -42,6 +32,24 @@ bool Patch::Restore() {
     return allSuccess;
 }
 
+bool Patch::PatchMemoryLocation(uintptr_t address, const void* data, size_t size) {
+    PatchMap newPatchMap;
+    newPatchMap.address = address;
+    newPatchMap.replace_size = size;
+
+    std::vector<uint8_t>& original_bytes = newPatchMap.original_bytes;
+    original_bytes.resize(size);
+    std::memcpy(original_bytes.data(), reinterpret_cast<void*>(address), size);
+
+    std::vector<uint8_t>& replace_bytes = newPatchMap.replace_bytes;
+    replace_bytes.resize(size);
+    std::memcpy(replace_bytes.data(), data, size);
+
+    m_vecPatchMap.push_back(newPatchMap);
+
+    return Helpers::SafeMemoryPatch(address, data, size);
+}
+
 bool Patch::ExecutePatches() {
     bool bIsSuccessful = true;
     for (int i = 0; i < g_Patches.size(); ++i) {
@@ -60,22 +68,4 @@ bool Patch::RestorePatches() {
             bIsSuccessful = false;
     }
     return bIsSuccessful;
-}
-
-bool Patch::PatchMemoryLocation(uintptr_t address, const void* data, size_t size) {
-    PatchMap newPatchMap;
-    newPatchMap.address = address;
-    newPatchMap.replace_size = size;
-
-    std::vector<uint8_t>& original_bytes = newPatchMap.original_bytes;
-    original_bytes.resize(size);
-    std::memcpy(original_bytes.data(), reinterpret_cast<void*>(address), size);
-
-    std::vector<uint8_t>& replace_bytes = newPatchMap.replace_bytes;
-    replace_bytes.resize(size);
-    std::memcpy(replace_bytes.data(), data, size);
-
-    m_vecPatchMap.push_back(newPatchMap);
-
-    return Helpers::SafeMemoryPatch(address, data, size);
 }

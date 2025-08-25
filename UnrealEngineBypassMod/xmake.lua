@@ -1,4 +1,4 @@
-local projectName = "MyMod"
+local projectName = "UnrealEngineBypassMod"
 
 target(projectName)
 	add_rules("ue4ss.mod")

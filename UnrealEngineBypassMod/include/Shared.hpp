@@ -1,11 +1,6 @@
 #pragma once
 #include <SigScanner/SinglePassSigScanner.hpp>
 
-using RC::SignatureContainer;
-using RC::SignatureData;
-using RC::SinglePassScanner;
-using RC::ScanTarget;
-
 enum AddressRetrievalType {
 	SIGNATURE,
 	OFFSET,
@@ -24,7 +19,14 @@ public:
 	bool		m_bIsInitialized;
 	uintptr_t	m_iTargetAddress;
 
-	Address() {}
+	Address() : 
+		m_retrieval_type(AddressRetrievalType::SIGNATURE),
+		m_iBaseAddress(0),
+		m_iRelativeAddress(0),
+		m_szSignature(),
+		m_bIsInitialized(false),
+		m_iTargetAddress(0)
+	{}
 	Address(AddressRetrievalType retrieval_type, uintptr_t base_address = NULL, uintptr_t relative_address = NULL, std::string signature = "") :
 		m_retrieval_type(retrieval_type),
 		m_iBaseAddress(base_address),
@@ -53,36 +55,34 @@ public:
 
 private:
 	bool FindAddressBySignature() {
-
-		SignatureContainer func_container(
-			std::vector<SignatureData>{ {.signature = m_szSignature} },
+		RC::SignatureContainer func_container(
+			std::vector<RC::SignatureData>{ {.signature = m_szSignature} },
 			// On match
-			[&](SignatureContainer& container) -> bool {
+			[&](RC::SignatureContainer& container) -> bool {
 				m_iTargetAddress = reinterpret_cast<uintptr_t>(container.get_match_address());
 				container.get_did_succeed() = true;
 				m_bIsInitialized = true;
 				return true;
 			},
 			// On scan finished
-			[&](SignatureContainer& container) -> void {
+			[&](RC::SignatureContainer& container) -> void {
 				0;
 			}
 		);
 
-		SinglePassScanner::SignatureContainerMap signature_map{
+		RC::SinglePassScanner::SignatureContainerMap signature_map{
 			{
-				ScanTarget::Engine,
+				RC::ScanTarget::Engine,
 				{ 
 					func_container
 				}
 			}
 		};
-		SinglePassScanner::start_scan(signature_map);
+		RC::SinglePassScanner::start_scan(signature_map);
 		return m_bIsInitialized;
 	}
 
 	bool FindAddressByOffset() {
-		// its just adding the base address and relative address lol,maybe refactor this later on
 		m_iTargetAddress = m_iBaseAddress + m_iRelativeAddress;
 		m_bIsInitialized = true;
 		return true;

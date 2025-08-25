@@ -1,7 +1,10 @@
 #pragma once
 
+#include <cstdint>
+#include <vector>
 #include <functional>
 
+#include "include/Shared.hpp"
 // Stores the original bytes
 class PatchMap {
 public:
@@ -27,8 +30,17 @@ public:
 
 	bool Execute();
 	bool Restore();
-	static bool RegisterPatch(Patch* patch_instance);
-	static bool UnregisterPatches();
+
+	__forceinline static void RegisterPatch(Patch* patch_instance) {
+		g_Patches.push_back(patch_instance);
+	}
+
+	static bool UnregisterPatches() {
+		if (!RestorePatches())
+			return false;
+		g_Patches.clear();
+		return true;
+	};
 
 	static bool ExecutePatches();
 	static bool RestorePatches();

@@ -1,20 +1,41 @@
-# Unreal Engine Patcher
+# Unreal Engine Asset Signature Bypass
 
-Patches some bytes and hooks some functions in order to do some stuff that's normally not allowed by some program..
+UE4SS mod that bypasses Unreal Engine asset signature checks.
 
+## Compatibility
+
+### Tested Versions
+- Unreal Engine 5.5.4
+
+## Prerequisites
+
+- Epic Games account with Unreal Engine source code access
+- XMake
+- Git
 
 ## Installation
 
-1. Make sure your account have access to Unreal Engine's source code.
-2. `cd` into RE-UE4SS and execute: `git submodule update --init --recursive`
-3. Then execute this at the root path :
+### 1. Clone and Setup
+```bash
+git clone https://github.com/syahmizul/unreal-patch.git
+cd unreal-patch
+git submodule update --init --recursive
+```
+
+### 2. Build Options
+
+#### Direct Build
 ```bash
 xmake f -m "Game__Shipping__Win64"
 xmake
 ```
 
-or 
-
+#### Generate Visual Studio Project
 ```bash
 xmake project -k vsxmake2022
 ```
+Then open the generated solution in Visual Studio 2022.
+
+## Credits
+
+- [Buckminsterfullerene02 / LongerWarrior](https://gist.github.com/Buckminsterfullerene02/90077ce81c0fd908144498869f4ea288)

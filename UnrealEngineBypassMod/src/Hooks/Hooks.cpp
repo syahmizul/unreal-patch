@@ -1,15 +1,4 @@
-#include <include/Globals.hpp>
-
-bool Hooks::RegisterHook(Hooks* hook_instance) {
-    g_Hooks.push_back(hook_instance);
-    return true;
-}
-
-bool Hooks::UnregisterHooks() {
-    RestoreHooks();
-    g_Hooks.clear();
-    return true;
-}
+#include "include/Hooks/Hooks.hpp"
 
 bool Hooks::Execute() {
     if (!FindAddress() || !m_bIsInitialized || m_iTargetAddress == 0 || m_HookFunction == 0)
@@ -36,8 +25,6 @@ bool Hooks::Restore() {
         return false;
     return m_Detour->unHook();
 }
-
-
 
 bool Hooks::ExecuteHooks() {
     bool bIsSuccessful = true;

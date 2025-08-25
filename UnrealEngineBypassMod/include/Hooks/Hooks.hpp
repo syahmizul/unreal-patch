@@ -4,7 +4,7 @@
 #undef ensure
 #include <polyhook2/Detour/x64Detour.hpp>
 #pragma pop_macro("ensure")
-
+#include "include/Shared.hpp"
 class Hooks : public Address {
 public:
 	uintptr_t m_HookFunction;
@@ -22,8 +22,15 @@ public:
 	bool Execute();
 	bool Restore();
 
-	static bool RegisterHook(Hooks* hook_instance);
-	static bool UnregisterHooks();
+	__forceinline static void RegisterHook(Hooks* hook_instance) {
+		g_Hooks.push_back(hook_instance);
+	}
+	static bool UnregisterHooks() {
+		if (!RestoreHooks())
+			return false;
+		g_Hooks.clear();
+		return true;
+	};
 
 	static bool ExecuteHooks();
 	static bool RestoreHooks();
