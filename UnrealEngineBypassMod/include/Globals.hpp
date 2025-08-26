@@ -11,9 +11,9 @@
 #if UE_BUILD_DEBUG
 #define LOG_SEPARATOR STR("|")
 #define LOG(level, format, ...) \
-    RC::Output::send<level>(MOD_NAME LOG_SEPARATOR STR(format) STR("\n"), __VA_ARGS__)
+    RC::Output::send<level>(MOD_NAME LOG_SEPARATOR STR(format) STR("\n") , ##__VA_ARGS__)
 #define LOG_FUNCTION(level, format, ...) \
-    LOG(level, "{}| " format ":", __FUNCTION__, __VA_ARGS__)
+    LOG(level, "{}| " STR(format) , __FUNCTIONW__ , ##__VA_ARGS__)
 #else
 #define LOG_SEPARATOR
 #define LOG(level, format, ...)
@@ -25,6 +25,8 @@
 
 #include "include/Patch/Patch.hpp"
 #include "include/Hooks/Hooks.hpp"
+
+#include <DynamicOutput/DynamicOutput.hpp>
 
 namespace Globals {
 

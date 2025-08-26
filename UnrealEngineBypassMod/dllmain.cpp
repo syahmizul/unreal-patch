@@ -1,23 +1,35 @@
-﻿#include <Windows.h>
-
-#include <Mod/CppUserModBase.hpp>
+﻿#include <Mod/CppUserModBase.hpp>
 #include <include/Globals.hpp>
 
 class UnrealEngineBypassMod : public RC::CppUserModBase
 {
 public:
     UnrealEngineBypassMod() : RC::CppUserModBase() {
+#if UE_BUILD_DEBUG
+        LOG_FUNCTION(RC::LogLevel::Verbose, "Initializing mod");
+#endif
+
         ModName = MOD_NAME;
         ModVersion = MOD_VERSION;
         ModDescription = MOD_DESCRIPTION;
         ModAuthors = MOD_AUTHOR;
 
 #if UE_BUILD_DEBUG
+        LOG_FUNCTION(RC::LogLevel::Verbose, "Waiting for debugger");
         while (!IsDebuggerPresent()) {
             Sleep(1000);
         }
 #endif
-        Globals::Initialize();
+
+        bool bInitResult = Globals::Initialize();
+#if UE_BUILD_DEBUG
+        if (bInitResult) {
+            LOG_FUNCTION(RC::LogLevel::Verbose, "Mod initialized");
+        }
+        else {
+            LOG_FUNCTION(RC::LogLevel::Verbose, "Mod failed to initialize");
+        }
+#endif
     }
 
     ~UnrealEngineBypassMod() override {

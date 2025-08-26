@@ -21,7 +21,7 @@ namespace Globals {
 
 	void RegisterFPakPlatformFile__MountHook() {
 #if UE_BUILD_DEBUG
-		LOG_FUNCTION(RC::LogLevel::Verbose, "RegisterFPakPlatformFile__MountHook called", "");
+		LOG_FUNCTION(RC::LogLevel::Verbose, "RegisterFPakPlatformFile__MountHook called");
 #endif
 
 		Globals::g_FPakPlatformFile__Mount_Hook.emplace(
@@ -34,7 +34,7 @@ namespace Globals {
 		Hooks::RegisterHook(&Globals::g_FPakPlatformFile__Mount_Hook.value());
 
 #if UE_BUILD_DEBUG
-		LOG_FUNCTION(RC::LogLevel::Verbose, "FPakPlatformFile__Mount hook registered", "");
+		LOG_FUNCTION(RC::LogLevel::Verbose, "FPakPlatformFile__Mount hook registered");
 #endif
 	}
 }
@@ -48,7 +48,7 @@ static bool hkFPakPlatformFile__Mount(uintptr_t instance, const RC::Unreal::TCHA
 
 	if (!Globals::g_FPakPlatformFile__Mount_Hook.has_value()) {
 #if UE_BUILD_DEBUG
-		LOG_FUNCTION(RC::LogLevel::Error, "g_FPakPlatformFile__Mount_Hook is not set!", "");
+		LOG_FUNCTION(RC::LogLevel::Error, "g_FPakPlatformFile__Mount_Hook is not set!");
 #endif
 		return false;
 	}
@@ -57,7 +57,7 @@ static bool hkFPakPlatformFile__Mount(uintptr_t instance, const RC::Unreal::TCHA
 
 	if (hook_instance.m_OriginalFunction == 0) {
 #if UE_BUILD_DEBUG
-		LOG_FUNCTION(RC::LogLevel::Error, "Original function is null!", "");
+		LOG_FUNCTION(RC::LogLevel::Error, "Original function is null!");
 #endif
 		return false;
 	}

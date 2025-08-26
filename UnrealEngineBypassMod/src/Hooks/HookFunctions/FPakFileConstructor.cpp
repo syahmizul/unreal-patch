@@ -11,7 +11,7 @@ namespace Globals {
 
     void RegisterFPakFileConstructorHook() {
 #if UE_BUILD_DEBUG
-        LOG_FUNCTION(RC::LogLevel::Verbose, "RegisterFPakFileConstructorHook called", "");
+        LOG_FUNCTION(RC::LogLevel::Verbose, "RegisterFPakFileConstructorHook called");
 #endif
 
         Globals::g_FPakFileConstructor_Hook.emplace(
@@ -24,7 +24,7 @@ namespace Globals {
         Hooks::RegisterHook(&Globals::g_FPakFileConstructor_Hook.value());
 
 #if UE_BUILD_DEBUG
-        LOG_FUNCTION(RC::LogLevel::Verbose, "FPakFileConstructor hook registered", "");
+        LOG_FUNCTION(RC::LogLevel::Verbose, "FPakFileConstructor hook registered");
 #endif
     }
 
@@ -39,7 +39,7 @@ static uintptr_t hkFPakFileConstructor(uintptr_t instance, IPlatformFile* LowerL
 
     if (!Globals::g_FPakFileConstructor_Hook.has_value()) {
 #if UE_BUILD_DEBUG
-        LOG_FUNCTION(RC::LogLevel::Error, "g_FPakFileConstructor_Hook is not set!", "");
+        LOG_FUNCTION(RC::LogLevel::Error, "g_FPakFileConstructor_Hook is not set!");
 #endif
         return NULL;
     }
@@ -48,7 +48,7 @@ static uintptr_t hkFPakFileConstructor(uintptr_t instance, IPlatformFile* LowerL
 
     if (hook_instance.m_OriginalFunction == 0) {
 #if UE_BUILD_DEBUG
-        LOG_FUNCTION(RC::LogLevel::Error, "Original FPakFile constructor is null!", "");
+        LOG_FUNCTION(RC::LogLevel::Error, "Original FPakFile constructor is null!");
 #endif
         return NULL;
     }
@@ -63,7 +63,7 @@ static uintptr_t hkFPakFileConstructor(uintptr_t instance, IPlatformFile* LowerL
     if (is_custom_pak) {
         bIsSigned = false; // Disable signature check for custom assets
 #if UE_BUILD_DEBUG
-        LOG_FUNCTION(RC::LogLevel::Verbose, "bIsSigned overridden to false for LogicMods", "");
+        LOG_FUNCTION(RC::LogLevel::Verbose, "bIsSigned overridden to false for LogicMods");
 #endif
     }
 
